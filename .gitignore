@@ -1,0 +1,9 @@
+test
+*.prg
+*.prg.elf
+mnist_q.c
+mnist/mnist.simplified.onnx
+mnist/*.pt
+mnist/MNIST
+mnist/__pycache__
+llvm-mos
