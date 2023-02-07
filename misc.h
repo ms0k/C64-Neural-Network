@@ -4,25 +4,30 @@
 #include <string.h>
 #if defined(__C64__)
 #include <6502.h>
-#include <_vic2.h>
 #include <_6526.h>
+#include <_vic2.h>
 #include <c64.h>
 
-/*Preferring to access some registers via macro for now (like BASIC V2 POKE, PEEK)*/
+/*Preferring to access some registers via macro for now (like BASIC V2 POKE,
+ * PEEK)*/
 #define JMP(x) ((void (*)(void))(x))()
-#define ADDR(x) (*(volatile uint8_t*)(x))
+#define ADDR(x) (*(volatile uint8_t *)(x))
 
 /*Generated neural network code entry point*/
-void entry(const int8_t [1][1][14][14], int8_t[1][10]);
+void entry(const int8_t[1][1][14][14], int8_t[1][10]);
 
 /*joystick status bits*/
-enum{
-	JOY_UP=1u<<0u, JOY_DOWN=1u<<1u, JOY_LEFT=1u<<2u, JOY_RIGHT=1u<<3u, JOY_FIRE=1u<<4u
+enum {
+  JOY_UP = 1u << 0u,
+  JOY_DOWN = 1u << 1u,
+  JOY_LEFT = 1u << 2u,
+  JOY_RIGHT = 1u << 3u,
+  JOY_FIRE = 1u << 4u
 };
 
-/*C64 interrupt service routines must be handled like ordinary C pointers to a void function*/
+/*C64 interrupt service routines must be handled like ordinary C pointers to a
+ * void function*/
 typedef void (*ISR_pointer_t)(void);
-
 
 /*Constants*/
 #define CHARSCRXSIZE 40u
@@ -41,15 +46,17 @@ typedef void (*ISR_pointer_t)(void);
 
 #define ADDR_SPRITE_RAM 0x07F8
 
-#define ACC_CHAR_RAM(x, y) (ADDR(ADDR_CHAR_RAM+(x)+(y)*CHARSCRXSIZE))
-#define ACC_COLOR_RAM(x, y) (ADDR(ADDR_COLOR_RAM+(x)+(y)*CHARSCRXSIZE))
-#define SPRITE_RAM_SETUP(s) (ADDR(ADDR_SPRITE_RAM+(s)))
+#define ACC_CHAR_RAM(x, y) (ADDR(ADDR_CHAR_RAM + (x) + (y)*CHARSCRXSIZE))
+#define ACC_COLOR_RAM(x, y) (ADDR(ADDR_COLOR_RAM + (x) + (y)*CHARSCRXSIZE))
+#define SPRITE_RAM_SETUP(s) (ADDR(ADDR_SPRITE_RAM + (s)))
 
 /*
-volatile uint8_t * const nn_position_indicator_ptr=(volatile uint8_t*)(0x0400+38+24*40);
-volatile uint8_t * const nn_position_indicator2_ptr=(volatile uint8_t*)(0x0400+37+24*40);
+volatile uint8_t * const nn_position_indicator_ptr=(volatile
+uint8_t*)(0x0400+38+24*40); volatile uint8_t * const
+nn_position_indicator2_ptr=(volatile uint8_t*)(0x0400+37+24*40);
 */
 
-/*The rasterizer's interrupt is a nice regular high-frequency event to hook UI things like a status indicator into*/
-#define INTERRUPTVEC_RASTERIZER (*(ISR_pointer_t*)0x0314)
+/*The rasterizer's interrupt is a nice regular high-frequency event to hook UI
+ * things like a status indicator into*/
+#define INTERRUPTVEC_RASTERIZER (*(ISR_pointer_t *)0x0314)
 #endif
