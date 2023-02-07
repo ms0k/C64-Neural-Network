@@ -1,5 +1,6 @@
 #include "misc.h"
 
+/*example numbers*/
 const uint8_t three_raw[14*14] = {
   0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xff, 0xff,
   0xff, 0xff, 0xff, 0xff, 0x00, 0x00, 0x00, 0xff, 0xff, 0xff, 0xff, 0x00,
@@ -184,11 +185,12 @@ const uint8_t cursprite[]={
 void do_paint(int8_t tens_input[1][1][14][14]){
 	uint8_t pointpos[2]={7, 7};
 	uint8_t pixel_flipped=0;
+	/*Setup cursor sprite*/
 	for(int i=0; i<64; i++)ADDR(0x2c0+i)=cursprite[i];
 	VIC.spr_color[0]=COLOR_GRAY3;
 	VIC.spr_ena|=1u;
 	SPRITE_RAM_SETUP(0)=11;
-	while(ADDR(0xcb)==1){}
+	while(ADDR(0xcb)==1){} /*Wait until "enter" released*/
 	while(1){
 		if(ADDR(0xc5)==1)break; /*Key pressed "enter"*/
 		/*Move on joystick axis or arrow keypress*/
@@ -271,16 +273,24 @@ void do_mnist(void){
 		/*Display results and calculation duration*/
 		drawborder(COLOR_WHITE);
 		int8_t maxresult=-127, maxresultind=-1;
-		setcursor(17, 0); printf("PROBABILITIES:");
+		for(uint8_t i=0; i<10; i++){
+			if(tens_output[0][i]>maxresult){
+				maxresult=tens_output[0][i];
+				maxresultind=i;
+			}
+		}
+		setcursor(17, 0); printf("OUTPUTS:");
 		for(uint8_t i=0; i<10; i++){
 			setcursor(17, i+1);
 			printf("%d: %4d", i, tens_output[0][i]);
-			if(tens_output[0][i]>maxresult){maxresult=tens_output[0][i]; maxresultind=i;}
+			for(uint8_t j=0; j<7; j++){
+				ACC_COLOR_RAM(17+j, i+1) = (i==maxresultind) ? COLOR_YELLOW : COLOR_WHITE;
+			}
 		}
 		int16_t total_time=(time2[0]-time1[0])*60*60+(time2[1]-time1[1])*60+(time2[2]-time1[2]);
 		setcursor(0, 17);
 		printf("%02d:%02d:%02d.%d->%02d:%02d:%02d.%d->%4dS RUNTIME", time1[0], time1[1], time1[2], time1[3],  time2[0], time2[1], time2[2], time2[3],   total_time);
-		setcursor(0, 18);
+		setcursor(0, 19);
 		printf("MOST PROBABLE NUMBER: %d", maxresultind);
 	}
 }

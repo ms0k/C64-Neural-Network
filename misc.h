@@ -8,7 +8,7 @@
 #include <_6526.h>
 #include <c64.h>
 
-/*Preferring to access some registers via macro for now*/
+/*Preferring to access some registers via macro for now (like BASIC V2 POKE, PEEK)*/
 #define JMP(x) ((void (*)(void))(x))()
 #define ADDR(x) (*(volatile uint8_t*)(x))
 
