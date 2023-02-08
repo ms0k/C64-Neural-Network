@@ -55,4 +55,4 @@ The default setup of LLVM-MOS works with the OS enabled and standard memory layo
 
 ## License
 
-This project is licensed under creative commons CC-BY.
+See the LICENSE file.

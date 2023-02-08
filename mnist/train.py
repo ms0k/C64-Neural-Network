@@ -141,9 +141,15 @@ def train(model, epochs, device, save_every_epochs=0):
     history = []
     model = model.to(device)
     grad_history = {}
+    start_epochs = 0
+    if 0:
+        trainstate = torch.load("trainstate_50.pt")
+        optimizer.load_state_dict(trainstate["optimizer"])
+        start_epochs = trainstate["epochs"]
+        model = trainstate["model"]
     for name, param in model.named_parameters():
         grad_history[name] = []
-    for epoch in tqdm.tqdm(range(epochs)):
+    for epoch in tqdm.tqdm(range(start_epochs, epochs)):
         train_loss = 0.0
         train_loss_add = 0.0
         train_acc = 0.0
@@ -206,7 +212,7 @@ print(prof.key_averages(group_by_input_shape=True).table(sort_by="cpu_time_total
 print(prof.key_averages(group_by_stack_n=5).table(sort_by="self_cuda_time_total", row_limit=2))
 prof.export_chrome_trace("trace.json")
 """
-history, grad_history = train(model, 100, train_device, save_every_epochs=50)
+history, grad_history = train(model, 200, train_device, save_every_epochs=50)
 
 history = np.array(history)
 
